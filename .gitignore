@@ -165,4 +165,5 @@ pip-log.txt
 
 dwsync.xml
 
-#SMF
+# CSV data files
+*.csv
