@@ -1,61 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 
-namespace Nobel
-{
-	/// <summary>
-	/// Interaction logic for BeamerWindow.xaml
-	/// </summary>
-	public partial class BeamerWindow : Window
-	{
-		public Boolean _allowclosing = false;
+namespace Nobel.Economie.BeamerWindows {
+    /// <summary>
+    /// Interaction logic for ScrollerBeamerWindow.xaml
+    /// </summary>
+    public partial class ScrollerBeamerWindow : BeamerWindow {
 		public long lastCount = 0;
-		public BeamerWindow()
+		public ScrollerBeamerWindow()
 		{
 			InitializeComponent();
 		}
-
-		private void Window_KeyDown(object sender, KeyEventArgs e)
-		{
-			if (e.Key == Key.F11)
-			{
-				if (WindowState != System.Windows.WindowState.Maximized)
-				{
-					WindowStyle = System.Windows.WindowStyle.None;
-					WindowState = System.Windows.WindowState.Maximized;
-					ResizeMode = System.Windows.ResizeMode.NoResize;
-				}
-				else
-				{
-					WindowStyle = System.Windows.WindowStyle.SingleBorderWindow;
-					WindowState = System.Windows.WindowState.Normal;
-					ResizeMode = System.Windows.ResizeMode.CanResize;
-				}
-                checkAnimation();
-			}
-
-		}		
-
-		private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-		{
-			e.Cancel = !_allowclosing;
-		}
-
-		public void updateTimeslots(ref List<Timeslot> timeslots, ref Dictionary<string,int> pointsources, DateTime ecoStart, TimeSpan timeslotLen)
+        #region BeamerWindow Override Methods       
+        public override void updateTimeslots(ref List<Timeslot> timeslots, ref Dictionary<string,int> pointsources, DateTime ecoStart, TimeSpan timeslotLen)
 		{			
 			int timeslot = 0;
 			TimeSpan ts = DateTime.Now - ecoStart;
-            stackPanel.Children.Clear();
-            stackPanel.Children.Add(new Label() { Content = "Altijd", FontWeight = FontWeights.Bold });
+            TimeslotsStackPanel.Children.Clear();
+            TimeslotsStackPanel.Children.Add(new Label() { Content = "Permanent", FontWeight = FontWeights.Bold });
             foreach (KeyValuePair<String, int> kvp in pointsources)
 			{                   
-                stackPanel.Children.Add(new Label() { Content = String.Format("{0} ({1})", kvp.Key.Trim('%').UppercaseFirst(), kvp.Value) });
+                TimeslotsStackPanel.Children.Add(new Label() { Content = String.Format("{0} ({1})", kvp.Key.Trim('%').UppercaseFirst(), kvp.Value) });
             }
            
 			if (ts > TimeSpan.Zero)
@@ -64,10 +34,10 @@ namespace Nobel
 			}
 			if (timeslot >= 0 && timeslot < timeslots.Count && ts > TimeSpan.Zero)
 			{	
-			    stackPanel.Children.Add(new Label() { Content = "Nu", FontWeight = FontWeights.Bold });
+			    TimeslotsStackPanel.Children.Add(new Label() { Content = "Tijdelijk", FontWeight = FontWeights.Bold });
 				foreach (KeyValuePair<String, int> kvp in timeslots[timeslot].Items)
 				{                   
-                    stackPanel.Children.Add(new Label() { Content = String.Format("{0} ({1})", kvp.Key.Trim('%').UppercaseFirst(), kvp.Value) });
+                    TimeslotsStackPanel.Children.Add(new Label() { Content = String.Format("{0} ({1})", kvp.Key.Trim('%').UppercaseFirst(), kvp.Value) });
                 }
 			}			
 			if (ts <= TimeSpan.Zero)
@@ -78,15 +48,15 @@ namespace Nobel
             string minleft = timeToNext.TotalMinutes < 0.5 ? "<1" : timeToNext.TotalMinutes.ToString("F0");
 			if (timeslot+1 >= 0 && timeslot+1 < timeslots.Count)
 			{
-                stackPanel.Children.Add(new Label() { Content = String.Format("Straks (nog {0} min)", minleft), FontWeight = FontWeights.Bold });				
+                TimeslotsStackPanel.Children.Add(new Label() { Content = String.Format("Straks (nog {0} min)", minleft), FontWeight = FontWeights.Bold });				
 				foreach (KeyValuePair<String, int> kvp in timeslots[timeslot + 1].Items)
 				{
-                    stackPanel.Children.Add(new Label() { Content = String.Format("{0} ({1})", kvp.Key.Trim('%').UppercaseFirst(), kvp.Value) });
+                    TimeslotsStackPanel.Children.Add(new Label() { Content = String.Format("{0} ({1})", kvp.Key.Trim('%').UppercaseFirst(), kvp.Value) });
 				}
 			}
 		}
 
-		public void updateScroller(ref Dictionary<String, long> points)
+		public override void updateDisplay(ref Dictionary<String, long> points)
 		{
 			upScroller.Children.Clear();
 			if (points.Count > 0)
@@ -148,34 +118,52 @@ namespace Nobel
             }
 			lastCount = points.Count;
 		}
-
-		private void Window_Loaded(object sender, RoutedEventArgs e)
+        #endregion
+        #region Event Handlers
+        private void Window_Loaded(object sender, RoutedEventArgs e)
 		{
             checkAnimation();		
 		}
-		public void updateAnimation(){
-			double from = 0.0;
-            double to = Math.Min(0,canUp.ActualHeight-upScroller.ActualHeight);
+        private void Window_KeyDown(object sender, KeyEventArgs e) {
+            if (e.Key == Key.F11) {
+                if (WindowState != System.Windows.WindowState.Maximized) {
+                    WindowStyle = System.Windows.WindowStyle.None;
+                    WindowState = System.Windows.WindowState.Maximized;
+                    ResizeMode = System.Windows.ResizeMode.NoResize;
+                } else {
+                    WindowStyle = System.Windows.WindowStyle.SingleBorderWindow;
+                    WindowState = System.Windows.WindowState.Normal;
+                    ResizeMode = System.Windows.ResizeMode.CanResize;
+                }
+                checkAnimation();
+            }
+
+        }
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
+            e.Cancel = !this.AllowClosing;
+        }
+        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+		{
+            checkAnimation();
+		}
+        #endregion
+        #region Animation Methods
+        public void updateAnimation() {
+            double from = 0.0;
+            double to = Math.Min(0, canUp.ActualHeight - upScroller.ActualHeight);
             DoubleAnimationUsingKeyFrames DA = new DoubleAnimationUsingKeyFrames();
-            DA.KeyFrames.Add(new LinearDoubleKeyFrame(from,KeyTime.FromPercent(0)));
+            DA.KeyFrames.Add(new LinearDoubleKeyFrame(from, KeyTime.FromPercent(0)));
             DA.KeyFrames.Add(new LinearDoubleKeyFrame(to, KeyTime.FromPercent(.37)));
             DA.KeyFrames.Add(new LinearDoubleKeyFrame(to, KeyTime.FromPercent(.43)));
             DA.KeyFrames.Add(new LinearDoubleKeyFrame(from, KeyTime.FromPercent(.94)));
             DA.KeyFrames.Add(new LinearDoubleKeyFrame(from, KeyTime.FromPercent(1)));
             DA.RepeatBehavior = RepeatBehavior.Forever;
-            DA.Duration = new Duration(TimeSpan.FromSeconds(Math.Abs(to-from) / 15));
+            DA.Duration = new Duration(TimeSpan.FromSeconds(Math.Abs(to - from) / 15));
             upScroller.BeginAnimation(Canvas.TopProperty, DA);
-		}
-		public void stopAnimation()
-		{
+        }
+        public void stopAnimation() {
             upScroller.BeginAnimation(Canvas.TopProperty, null);
-		}
-
-		private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
-		{
-            checkAnimation();
-		}
-
+        }
         private void checkAnimation()
         {
             canUp.UpdateLayout();
@@ -189,5 +177,6 @@ namespace Nobel
                 stopAnimation();
             }
         }
-	}
+        #endregion
+    }
 }

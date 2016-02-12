@@ -7,12 +7,12 @@ using System.Windows;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Nobel")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Nobel.Economie")]
+[assembly: AssemblyDescription("Nobelprijs voor Economie")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("EraYaN")]
-[assembly: AssemblyProduct("Nobel")]
-[assembly: AssemblyCopyright("Copyright © EraYaN 2013")]
+[assembly: AssemblyProduct("Nobel.Economie")]
+[assembly: AssemblyCopyright("Copyright © EraYaN 2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -43,15 +43,15 @@ using System.Windows;
 
 // Version information for an assembly consists of the following four values:
 //
-//      Major Version
-//      Minor Version 
-//      Build Number
-//      Revision
+//      Year
+//      Month
+//      Day
+//      Iteration
 //
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 
 [assembly: AssemblyVersion("0.5.51.0")]
-[assembly: AssemblyFileVersion("2015.3.17.51")]
+[assembly: AssemblyFileVersion("2016.2.12.65")]
 

@@ -7,7 +7,7 @@
     <ProjectGuid>{21DEE152-B581-4886-B8A9-E4950365391F}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Nobel</RootNamespace>
+    <RootNamespace>Nobel.Economie</RootNamespace>
     <AssemblyName>Economie</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -53,9 +53,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Accessibility" />
-    <Reference Include="MySql.Data, Version=6.9.5.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
-      <Private>True</Private>
-    </Reference>
+    <Reference Include="Microsoft.Expression.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="MySql.Data" />
     <Reference Include="PresentationUI, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="ReachFramework" />
     <Reference Include="System" />
@@ -68,9 +67,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Xaml">
-      <RequiredTargetFramework>4.0</RequiredTargetFramework>
-    </Reference>
+    <Reference Include="System.Xaml" />
     <Reference Include="UIAutomationProvider" />
     <Reference Include="UIAutomationTypes" />
     <Reference Include="WindowsBase" />
@@ -82,7 +79,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="BeamerWindow.xaml">
+    <Page Include="BeamerWindows\ScrollerBeamerWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -94,31 +91,41 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="BeamerWindow.xaml.cs">
-      <DependentUpon>BeamerWindow.xaml</DependentUpon>
+    <Compile Include="BeamerWindows\BeamerWindow.cs" />
+    <Compile Include="BeamerWindows\ScrollerBeamerWindow.xaml.cs">
+      <DependentUpon>ScrollerBeamerWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="GroupIcons.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GroupIcons.resx</DependentUpon>
+    </Compile>
+    <Compile Include="IBeamerWindow.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="BeamerWindows\IconBeamerWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BeamerWindows\IconBeamerWindow.xaml.cs">
+      <DependentUpon>IconBeamerWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <EmbeddedResource Include="Properties\Resources.resx">
+    <EmbeddedResource Include="GroupIcons.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+      <LastGenOutput>GroupIcons.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="app.config" />
     <None Include="Properties\Settings.settings">
@@ -143,6 +150,35 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Bestuur.png" />
+    <None Include="Resources\Kurk.jpeg" />
+    <None Include="Resources\Nobel.png" />
+    <None Include="Resources\Octopus.jpeg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Asene.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Apollo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Krat.jpeg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Chaos.png" />
+    <None Include="Resources\Kielzog.png" />
+    <None Include="Resources\McClan.png" />
+    <None Include="Resources\Quast.png" />
+    <None Include="Resources\Schranz.png" />
+    <None Include="Resources\Spetter.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Deurklink.jpeg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\TDC.jpeg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

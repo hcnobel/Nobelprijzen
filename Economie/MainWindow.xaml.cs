@@ -1,4 +1,5 @@
 using MySql.Data.MySqlClient;
+using Nobel.Economie.BeamerWindows;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,7 +13,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
 
-namespace Nobel
+namespace Nobel.Economie
 {
 	/// <summary>
 	/// Interaction logic for MainWindow.xaml
@@ -21,7 +22,8 @@ namespace Nobel
 	{
 		BackgroundWorker updater = new BackgroundWorker();
 		MySqlConnection connection;
-		BeamerWindow bw = new BeamerWindow();
+        //ScrollerBeamerWindow bw = new ScrollerBeamerWindow();
+        BeamerWindow bw;
         Dictionary<string, long> points = new Dictionary<string, long>();
 		List<Timeslot> timeslots = new List<Timeslot>();
         Dictionary<string, int> pointSources = new Dictionary<string, int>();
@@ -30,13 +32,13 @@ namespace Nobel
         
 		Timer timerDatabase = new Timer(30000);
 		Action updateDB;
-		//DateTime ecoStart = new DateTime(2013, 9, 18, 19, 00, 00);
-       // DateTime ecoEnd = new DateTime(2013, 9, 19, 8, 00, 00);
-        DateTime ecoStart;// = new DateTime(0, 0, 0, 17, 00, 00);
-        DateTime ecoEnd;// = new DateTime(0, 0, 0, 0, 00, 00);
-		TimeSpan timeslotLen = new TimeSpan(0, 30, 0);
+		
+        DateTime ecoStart;
+        DateTime ecoEnd;
+		TimeSpan timeslotLen = new TimeSpan(0, 20, 0);
 		object _updaterLock = new object();
 		int totalQueries = 0;
+        
 
         Stopwatch performanceStopwatch = new Stopwatch();
 
@@ -54,8 +56,8 @@ WHERE Prijs_Naam LIKE ?product AND Bestelling_Time>=?timestart AND Bestelling_Ti
 		public MainWindow()
 		{
 			InitializeComponent();
-					
-			if (timeslotsPath.Exists)
+            Window w = (Window)this;
+            if (timeslotsPath.Exists)
 			{
 				using (StreamReader r = timeslotsPath.OpenText())
 				{
@@ -144,7 +146,7 @@ WHERE Prijs_Naam LIKE ?product AND Bestelling_Time>=?timestart AND Bestelling_Ti
 			updater.ProgressChanged += updater_ProgressChanged;
 			updater.RunWorkerCompleted += updater_RunWorkerCompleted;
 			updater.WorkerReportsProgress = true;
-            bw.Show();
+            
             timerDatabase.Elapsed += timerDatabase_Elapsed;
 		}
 
@@ -152,10 +154,11 @@ WHERE Prijs_Naam LIKE ?product AND Bestelling_Time>=?timestart AND Bestelling_Ti
 		{
             updaterProgress.Value = 0;
             performanceStopwatch.Stop();
+            //Outputs duration of the update, in Fixed point with two decimals
             writeOutputText(String.Format("Database update completed in {0:F2} seconds.", performanceStopwatch.Elapsed.TotalSeconds));
             lock (_updaterLock)
 			{
-				bw.updateScroller(ref points);
+                bw.updateDisplay(ref points);				
 			}					
 		}
 
@@ -184,21 +187,7 @@ WHERE Prijs_Naam LIKE ?product AND Bestelling_Time>=?timestart AND Bestelling_Ti
                         {
                             while (dataReader.Read())
                             {
-                                String deb = dataReader["Debiteur_Naam"].ToString();
-                                String item = dataReader["Prijs_Naam"].ToString();
-                                int aantal = Int32.Parse(dataReader["Totaal_Aantal"].ToString());
-                                if (item.Contains("fles", StringComparison.OrdinalIgnoreCase))
-                                {
-                                    aantal *= 20;
-                                }
-                                if (points.ContainsKey(deb))
-                                {
-                                    points[deb] += kvp.Value * aantal;
-                                }
-                                else
-                                {
-                                    points.Add(deb, kvp.Value * aantal);
-                                }
+                                updateScores(dataReader, kvp);
                             }
                         }
                     }
@@ -234,21 +223,7 @@ WHERE Prijs_Naam LIKE ?product AND Bestelling_Time>=?timestart AND Bestelling_Ti
                             {
                                 while (dataReader.Read())
                                 {
-                                    String deb = dataReader["Debiteur_Naam"].ToString();
-                                    String item = dataReader["Prijs_Naam"].ToString();
-                                    int aantal = Int32.Parse(dataReader["Totaal_Aantal"].ToString());
-                                    if (item.Contains("fles", StringComparison.OrdinalIgnoreCase))
-                                    {
-                                        aantal *= 20;
-                                    }
-                                    if (points.ContainsKey(deb))
-                                    {
-                                        points[deb] += kvp.Value * aantal;
-                                    }
-                                    else
-                                    {
-                                        points.Add(deb, kvp.Value * aantal);
-                                    }
+                                    updateScores(dataReader, kvp);
                                 }
                             }
                         }
@@ -271,6 +246,30 @@ WHERE Prijs_Naam LIKE ?product AND Bestelling_Time>=?timestart AND Bestelling_Ti
 			}
 		}
 
+        void updateScores(MySqlDataReader dataReader, KeyValuePair<String, int> kvp)
+        {
+            //Uitlezen Debiteur/Product/Aantal uit database
+            String deb = dataReader["Debiteur_Naam"].ToString();
+            String item = dataReader["Prijs_Naam"].ToString();
+            int aantal = Int32.Parse(dataReader["Totaal_Aantal"].ToString());
+            //Fles is 20 maal aantal punten
+            if (item.Contains("fles", StringComparison.OrdinalIgnoreCase))
+            {
+                aantal *= 20;
+            }
+            if (points.ContainsKey(deb))
+            {
+                //Debiteur bestaat al: punten toevoegen
+                points[deb] += kvp.Value * aantal;
+            }
+
+            else
+            {
+                //Debiteur bestaat nog niet: Toevoegen, plus punten
+                points.Add(deb, kvp.Value * aantal);
+            }
+        }
+
 		void timerDatabase_Elapsed(object sender, ElapsedEventArgs e)
 		{
 			g.Dispatcher.BeginInvoke(DispatcherPriority.Send, updateDB);
@@ -278,14 +277,15 @@ WHERE Prijs_Naam LIKE ?product AND Bestelling_Time>=?timestart AND Bestelling_Ti
 
 		private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
 		{
-			bw._allowclosing = true;
-			bw.Close();
-			if (connection != null)
+            if (bw != null) {
+                bw.AllowClosing = true;
+                bw.Close();
+            }
+            if (connection != null)
 			{
 				connection.Close();
 			}
 		}
-
         private void mysqlConnectButton_Click(object sender, RoutedEventArgs e)
         {
             MySqlConnectionStringBuilder csb = new MySqlConnectionStringBuilder();
@@ -324,6 +324,7 @@ WHERE Prijs_Naam LIKE ?product AND Bestelling_Time>=?timestart AND Bestelling_Ti
 			}
 
 			DateTime date = (DateTime)datePicker.SelectedDate;
+            //De borrel begint hardcoded om 17:00
 			ecoStart = new DateTime(date.Year, date.Month, date.Day, 17, 0, 0);
 			ecoEnd = ecoStart + new TimeSpan(duration,0,0);
 
@@ -348,6 +349,7 @@ WHERE Prijs_Naam LIKE ?product AND Bestelling_Time>=?timestart AND Bestelling_Ti
                 {
 					writeOutputText(String.Format("Connected.", ecoStart, ecoEnd));
                     mysqlConnectButton.IsEnabled = false;
+                    forceUpdateButton.IsEnabled = true;
                     timerDatabase.Start();
                     getCmd = new MySqlCommand(getQuery, connection);
                     getCmd.Prepare();
@@ -390,28 +392,50 @@ WHERE Prijs_Naam LIKE ?product AND Bestelling_Time>=?timestart AND Bestelling_Ti
                 updater.RunWorkerAsync();
 			}
             bw.updateTimeslots(ref timeslots, ref pointSources, ecoStart, timeslotLen);
+            
 		}
 
         private void forceUpdateButton_Click(object sender, RoutedEventArgs e)
         {
             updateDatabase();
         }
-	}
-	public class Timeslot
+
+        private void ShowBeamerWindowButton_Click(object sender, RoutedEventArgs e) {
+            if (BeamerWindowComboBox.SelectedItem != null) {
+                if (((ComboBoxItem)BeamerWindowComboBox.SelectedItem).Content.ToString() == "IconBeamerWindow")
+                    bw = new IconBeamerWindow();
+                else if (((ComboBoxItem)BeamerWindowComboBox.SelectedItem).Content.ToString() == "ScrollerBeamerWindow")
+                    bw = new ScrollerBeamerWindow();
+                else {
+                    writeOutputText("Unknown Beamer Window Type.");
+                    return;
+                }
+                //Handle UI changes
+                BeamerWindowComboBox.IsEnabled = false;
+                mysqlConnectButton.IsEnabled = true;
+                ShowBeamerWindowButton.IsEnabled = false;
+                //Show window
+                bw.Show();
+            } else {
+                writeOutputText("No Beamer Window Selected.");
+            }
+        }
+    }
+    public class Timeslot
 	{
 		public Dictionary<String,int> Items;
 	}
-	public static class DateTimeExtensions
-	{
-		public static long ToUnixTimestamp(this DateTime d)
-		{
-			var duration = d.ToUniversalTime() - new DateTime(1970, 1, 1, 0, 0, 0); //Make GMT timestamps.
+    public static class DateTimeExtensions
+    {
+        public static long ToUnixTimestamp(this DateTime d)
+        {
+            var duration = d.ToUniversalTime() - new DateTime(1970, 1, 1, 0, 0, 0); //Make GMT timestamps.
 
-			return (long)duration.TotalSeconds;
-		}
-	}
-	public static class TimeSpanExtension
-	{
+            return (long)duration.TotalSeconds;
+        }
+    }
+    public static class TimeSpanExtension
+    {
 		/// <summary>
 		/// Multiplies a timespan by an integer value
 		/// </summary>

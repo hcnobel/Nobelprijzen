@@ -1,0 +1,56 @@
+﻿<local:BeamerWindow
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Nobel.Economie.BeamerWindows"
+        xmlns:ed="http://schemas.microsoft.com/expression/2010/drawing" x:Class="Nobel.Economie.BeamerWindows.IconBeamerWindow"
+        mc:Ignorable="d"
+        Title="Nobelprijs voor de Economie - Icon Beamer Window" Height="999" Width="1459.96" WindowStartupLocation="CenterScreen" KeyDown="Window_KeyDown" Closing="Window_Closing" Background="Black" Foreground="White">
+    <local:BeamerWindow.Resources>
+        <Style x:Key="BeamerText" TargetType="{x:Type Label}">
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="FontSize" Value="48" />
+            <Setter Property="Padding" Value="0"/>
+        </Style>        
+    </local:BeamerWindow.Resources>
+    <Grid Margin="45,45,15,15">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="10*"/>
+        </Grid.ColumnDefinitions>
+        <Label Foreground="White" FontWeight="Bold" FontSize="29.333" Content="Scorelijst"/>
+        <StackPanel x:Name="TimeslotsStackPanel" Margin="0,54,0,37" HorizontalAlignment="Stretch" >
+            <StackPanel.Resources>
+                <Style TargetType="{x:Type Label}" BasedOn="{StaticResource ResourceKey=BeamerText}">
+                    <Setter Property="FontSize" Value="22"/>
+                </Style>
+            </StackPanel.Resources>
+        </StackPanel>
+        <WrapPanel x:Name="wrapPanel" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" ScrollViewer.VerticalScrollBarVisibility="Disabled" Margin="0" Grid.Column="1">
+            <WrapPanel.Resources>
+                <Style TargetType="{x:Type Grid}">
+                    <Setter Property="Height" Value="240" />
+                    <Setter Property="Background" Value="Transparent" />
+                    <Setter Property="Width" Value="180" />
+                    <Setter Property="Margin" Value="10"/>
+                </Style>
+                <Style TargetType="{x:Type Image}">
+                    <Setter Property="Stretch" Value="Uniform" />
+                    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                    <Setter Property="VerticalAlignment" Value="Stretch"/>
+                    <Setter Property="Margin" Value="0,0,0,40"/>
+                </Style>
+                <Style TargetType="{x:Type Label}">
+                    <Setter Property="HorizontalAlignment" Value="Stretch" />
+                    <Setter Property="Foreground" Value="Red" />
+                    <Setter Property="VerticalAlignment" Value="Bottom" />
+                    <Setter Property="HorizontalContentAlignment" Value="Center" />
+                    <Setter Property="VerticalContentAlignment" Value="Bottom" />
+                    <Setter Property="FontSize" Value="24" />
+                </Style>
+            </WrapPanel.Resources>                       
+        </WrapPanel>
+    </Grid>
+</local:BeamerWindow>
