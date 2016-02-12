@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Nobel.Economie.BeamerWindows"
         xmlns:ed="http://schemas.microsoft.com/expression/2010/drawing" x:Class="Nobel.Economie.BeamerWindows.IconBeamerWindow"
         mc:Ignorable="d"
-        Title="Nobelprijs voor de Economie - Icon Beamer Window" Width="1440" Height="1080" WindowStartupLocation="CenterScreen" KeyDown="Window_KeyDown" Closing="Window_Closing" Background="Black" Foreground="White">
+        Title="Nobelprijs voor de Economie - Icon Beamer Window" Width="1600" Height="1200" WindowStartupLocation="CenterScreen" KeyDown="Window_KeyDown" Closing="Window_Closing" Background="Black" Foreground="White">
     <local:BeamerWindow.Resources>
         <Style x:Key="BeamerText" TargetType="{x:Type Label}">
             <Setter Property="Foreground" Value="White" />
@@ -20,20 +20,20 @@
             <ColumnDefinition Width="2*"/>
             <ColumnDefinition Width="8*"/>
         </Grid.ColumnDefinitions>
-        <Label Foreground="White" FontWeight="Bold" FontSize="28" VerticalAlignment="Top" Content="Scorelijst"/>
+        <Label Foreground="White" FontWeight="Bold" FontSize="32" VerticalAlignment="Top" Content="Scorelijst"/>
         <StackPanel x:Name="TimeslotsStackPanel" Margin="0,54,0,10" HorizontalAlignment="Stretch" >
             <StackPanel.Resources>
                 <Style TargetType="{x:Type Label}" BasedOn="{StaticResource ResourceKey=BeamerText}">
-                    <Setter Property="FontSize" Value="22"/>
+                    <Setter Property="FontSize" Value="26"/>
                 </Style>
             </StackPanel.Resources>
         </StackPanel>
         <WrapPanel x:Name="wrapPanel" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" ScrollViewer.VerticalScrollBarVisibility="Disabled" Grid.Column="1">
             <WrapPanel.Resources>
                 <Style TargetType="{x:Type Grid}">
-                    <Setter Property="Height" Value="240" />
+                    <Setter Property="Height" Value="360" />
                     <Setter Property="Background" Value="Transparent" />
-                    <Setter Property="Width" Value="180" />
+                    <Setter Property="Width" Value="220" />
                     <Setter Property="Margin" Value="10"/>
                 </Style>
                 <Style TargetType="{x:Type Image}">
@@ -48,7 +48,7 @@
                     <Setter Property="VerticalAlignment" Value="Bottom" />
                     <Setter Property="HorizontalContentAlignment" Value="Center" />
                     <Setter Property="VerticalContentAlignment" Value="Bottom" />
-                    <Setter Property="FontSize" Value="24" />
+                    <Setter Property="FontSize" Value="28" />
                 </Style>
             </WrapPanel.Resources>                       
         </WrapPanel>
