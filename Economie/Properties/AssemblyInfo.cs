@@ -12,7 +12,7 @@ using System.Windows;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("EraYaN")]
 [assembly: AssemblyProduct("Nobel.Economie")]
-[assembly: AssemblyCopyright("Copyright © EraYaN 2016")]
+[assembly: AssemblyCopyright("Copyright © 2016, Erwin de Haan, Jamie Tirion")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -52,6 +52,6 @@ using System.Windows;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 
-[assembly: AssemblyVersion("0.5.51.0")]
+[assembly: AssemblyVersion("0.6.2.0")]
 [assembly: AssemblyFileVersion("2016.2.12.65")]
 

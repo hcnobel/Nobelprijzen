@@ -7,7 +7,6 @@ using System.Resources;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -111,25 +110,7 @@ namespace Nobel.Economie.BeamerWindows {
             }
         }
         #endregion
-        #region Event Handlers
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
-            e.Cancel = !this.AllowClosing;
-        }
-
-        private void Window_KeyDown(object sender, KeyEventArgs e) {
-            if (e.Key == Key.F11) {
-                if (WindowState != System.Windows.WindowState.Maximized) {
-                    WindowStyle = System.Windows.WindowStyle.None;
-                    WindowState = System.Windows.WindowState.Maximized;
-                    ResizeMode = System.Windows.ResizeMode.NoResize;
-                } else {
-                    WindowStyle = System.Windows.WindowStyle.SingleBorderWindow;
-                    WindowState = System.Windows.WindowState.Normal;
-                    ResizeMode = System.Windows.ResizeMode.CanResize;
-                }
-            }
-        }
-        #endregion
+        
         #region External Methods
         [DllImport("gdi32")]
         static extern int DeleteObject(IntPtr o);

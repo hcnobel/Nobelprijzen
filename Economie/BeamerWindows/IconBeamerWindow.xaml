@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Nobel.Economie.BeamerWindows"
         xmlns:ed="http://schemas.microsoft.com/expression/2010/drawing" x:Class="Nobel.Economie.BeamerWindows.IconBeamerWindow"
         mc:Ignorable="d"
-        Title="Nobelprijs voor de Economie - Icon Beamer Window" Height="999" Width="1459.96" WindowStartupLocation="CenterScreen" KeyDown="Window_KeyDown" Closing="Window_Closing" Background="Black" Foreground="White">
+        Title="Nobelprijs voor de Economie - Icon Beamer Window" Width="1440" Height="1080" WindowStartupLocation="CenterScreen" KeyDown="Window_KeyDown" Closing="Window_Closing" Background="Black" Foreground="White">
     <local:BeamerWindow.Resources>
         <Style x:Key="BeamerText" TargetType="{x:Type Label}">
             <Setter Property="Foreground" Value="White" />
@@ -15,20 +15,20 @@
             <Setter Property="Padding" Value="0"/>
         </Style>        
     </local:BeamerWindow.Resources>
-    <Grid Margin="45,45,15,15">
+    <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="3*"/>
-            <ColumnDefinition Width="10*"/>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="8*"/>
         </Grid.ColumnDefinitions>
-        <Label Foreground="White" FontWeight="Bold" FontSize="29.333" Content="Scorelijst"/>
-        <StackPanel x:Name="TimeslotsStackPanel" Margin="0,54,0,37" HorizontalAlignment="Stretch" >
+        <Label Foreground="White" FontWeight="Bold" FontSize="28" VerticalAlignment="Top" Content="Scorelijst"/>
+        <StackPanel x:Name="TimeslotsStackPanel" Margin="0,54,0,10" HorizontalAlignment="Stretch" >
             <StackPanel.Resources>
                 <Style TargetType="{x:Type Label}" BasedOn="{StaticResource ResourceKey=BeamerText}">
                     <Setter Property="FontSize" Value="22"/>
                 </Style>
             </StackPanel.Resources>
         </StackPanel>
-        <WrapPanel x:Name="wrapPanel" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" ScrollViewer.VerticalScrollBarVisibility="Disabled" Margin="0" Grid.Column="1">
+        <WrapPanel x:Name="wrapPanel" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" ScrollViewer.VerticalScrollBarVisibility="Disabled" Grid.Column="1">
             <WrapPanel.Resources>
                 <Style TargetType="{x:Type Grid}">
                     <Setter Property="Height" Value="240" />
