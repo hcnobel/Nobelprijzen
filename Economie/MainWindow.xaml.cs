@@ -27,8 +27,8 @@ namespace Nobel.Economie
         Dictionary<string, long> points = new Dictionary<string, long>();
 		List<Timeslot> timeslots = new List<Timeslot>();
         Dictionary<string, int> pointSources = new Dictionary<string, int>();
-		FileInfo timeslotsPath = new FileInfo("timeslots.csv");
-        FileInfo pointsourcesPath = new FileInfo("pointsources.csv");
+		FileInfo timeslotsPath = new FileInfo("Data/timeslots.csv");
+        FileInfo pointsourcesPath = new FileInfo("Data/pointsources.csv");
         
 		Timer timerDatabase = new Timer(30000);
 		Action updateDB;

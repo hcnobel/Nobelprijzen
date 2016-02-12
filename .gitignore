@@ -162,8 +162,3 @@ pip-log.txt
 
 # Mac crap
 .DS_Store
-
-dwsync.xml
-
-# CSV data files
-*.csv
