@@ -25,4 +25,12 @@ Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
+	GlobalSection(AutomaticVersions) = postSolution
+		AssemblyInfoFilePath = Properties\AssemblyInfo.cs
+		PrimaryVersionType = AssemblyFileVersionAttribute
+		UpdateAssemblyVersion = False
+		UpdateAssemblyFileVersion = True
+		UpdateAssemblyInfoVersion = False
+		AssemblyFileVersionSettings = YearStamp.MonthStamp.DayStamp.Increment
+	EndGlobalSection
 EndGlobal
