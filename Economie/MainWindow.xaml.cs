@@ -36,27 +36,41 @@ namespace Nobel.Economie
         DateTime ecoStart;
         DateTime ecoEnd;
 		TimeSpan timeslotLen = new TimeSpan(0, 20, 0);
+		int brackets = 1;
+		double bracketMP = 1;
+		TimeSpan BracketLen;
 		object _updaterLock = new object();
 		int totalQueries = 0;
         
 
         Stopwatch performanceStopwatch = new Stopwatch();
 
-		String getQuery = @"SELECT 
-    SUM(bestelling.Bestelling_AantalS) as Totaal_Aantal, debiteur.Debiteur_Naam, prijs.Prijs_Naam
-FROM
-    bestelling
-        LEFT JOIN
-    (bon
-    LEFT JOIN (debiteur) ON (Bon_Debiteur = Debiteur_ID)) ON (Bestelling_Bon = Bon_ID)
-  LEFT JOIN
-    (prijs) ON (Bestelling_Wat = Prijs_ID)
-WHERE Prijs_Naam LIKE ?product AND Bestelling_Time>=?timestart AND Bestelling_Time<=?timeend GROUP BY Debiteur_ID";
+		StringBuilder getQuery = new StringBuilder();
+		StringBuilder getQueryTS = new StringBuilder();
+		String getQueryStart = @"SELECT 
+			SUM(bestelling.Bestelling_AantalS) as Totaal_Aantal, debiteur.Debiteur_Naam, prijs.Prijs_Naam";
+
+			/*CASE
+			 WHEN Bestelling_Time<?timebracket1 THEN '0'
+			 WHEN Bestelling_Time>=?timebracket1 AND Bestelling_Time<?timebracket2 THEN '1'
+			 WHEN Bestelling_Time>=?timebracket2 AND Bestelling_Time<?timebracket3 THEN '2'
+			 ELSE '3'
+			END AS Bracket*/
+		String getQueryEnd = @"FROM
+			bestelling
+				LEFT JOIN
+			(bon
+			LEFT JOIN (debiteur) ON (Bon_Debiteur = Debiteur_ID)) ON (Bestelling_Bon = Bon_ID)
+		  LEFT JOIN
+			(prijs) ON (Bestelling_Wat = Prijs_ID)
+		WHERE Prijs_Naam LIKE ?product AND Bestelling_Time>=?timestart AND Bestelling_Time<=?timeend GROUP BY Debiteur_ID";
 		MySqlCommand getCmd;
+		MySqlCommand getCmdTS;
 		public MainWindow()
 		{
 			InitializeComponent();
             Window w = (Window)this;
+#region Loading Data
             if (timeslotsPath.Exists)
 			{
 				using (StreamReader r = timeslotsPath.OpenText())
@@ -141,6 +155,7 @@ WHERE Prijs_Naam LIKE ?product AND Bestelling_Time>=?timestart AND Bestelling_Ti
             {
                 MessageBox.Show("No pointsources.csv found.");
             }
+#endregion
 			updateDB = updateDatabase;
 			updater.DoWork += updater_DoWork;
 			updater.ProgressChanged += updater_ProgressChanged;
@@ -173,11 +188,11 @@ WHERE Prijs_Naam LIKE ?product AND Bestelling_Time>=?timestart AND Bestelling_Ti
 			{
 				int current = 0;
 				int tsn = 0;
+				int bracket = GetCurrentBracket();
                 points.Clear();
                 //stuff that gets you points the whole evening.
-                getCmd.Parameters["timestart"].Value = ecoStart.ToUnixTimestamp() * 1000;
-                getCmd.Parameters["timeend"].Value = ecoEnd.ToUnixTimestamp() * 1000;
-                foreach (KeyValuePair<String, int> kvp in pointSources)
+				
+				foreach (KeyValuePair<String, int> kvp in pointSources)
                 {
                     updater.ReportProgress((int)Math.Round(current / (double)totalQueries * 100.0));
                     try
@@ -187,7 +202,7 @@ WHERE Prijs_Naam LIKE ?product AND Bestelling_Time>=?timestart AND Bestelling_Ti
                         {
                             while (dataReader.Read())
                             {
-                                updateScores(dataReader, kvp);
+								updateScores(dataReader, kvp);
                             }
                         }
                     }
@@ -211,15 +226,15 @@ WHERE Prijs_Naam LIKE ?product AND Bestelling_Time>=?timestart AND Bestelling_Ti
 					{
                         continue;
 					}
-                    getCmd.Parameters["timestart"].Value = start.ToUnixTimestamp() * 1000;
-                    getCmd.Parameters["timeend"].Value = end.ToUnixTimestamp() * 1000;
+					getCmdTS.Parameters["timestart"].Value = start.ToUnixTimestamp() * 1000;
+					getCmdTS.Parameters["timeend"].Value = end.ToUnixTimestamp() * 1000;
                     foreach (KeyValuePair<String, int> kvp in ts.Items)
                     {
                         updater.ReportProgress((int)Math.Round(current / (double)totalQueries * 100.0));
                         try
                         {
-                            getCmd.Parameters["product"].Value = kvp.Key;
-                            using (MySqlDataReader dataReader = getCmd.ExecuteReader())
+							getCmdTS.Parameters["product"].Value = kvp.Key;
+							using (MySqlDataReader dataReader = getCmdTS.ExecuteReader())
                             {
                                 while (dataReader.Read())
                                 {
@@ -246,11 +261,12 @@ WHERE Prijs_Naam LIKE ?product AND Bestelling_Time>=?timestart AND Bestelling_Ti
 			}
 		}
 
-        void updateScores(MySqlDataReader dataReader, KeyValuePair<String, int> kvp)
+		void updateScores(MySqlDataReader dataReader, KeyValuePair<String, int> kvp)
         {
             //Uitlezen Debiteur/Product/Aantal uit database
             String deb = dataReader["Debiteur_Naam"].ToString();
             String item = dataReader["Prijs_Naam"].ToString();
+			int bracket = Int32.Parse(dataReader["Bracket"].ToString());
             int aantal = Int32.Parse(dataReader["Totaal_Aantal"].ToString());
             //Fles is 20 maal aantal punten
             if (item.Contains("fles", StringComparison.OrdinalIgnoreCase))
@@ -260,13 +276,13 @@ WHERE Prijs_Naam LIKE ?product AND Bestelling_Time>=?timestart AND Bestelling_Ti
             if (points.ContainsKey(deb))
             {
                 //Debiteur bestaat al: punten toevoegen
-                points[deb] += kvp.Value * aantal;
+				points[deb] += (long)Math.Round(kvp.Value * aantal * GetBracketMultiplier(bracket));
             }
 
             else
             {
                 //Debiteur bestaat nog niet: Toevoegen, plus punten
-                points.Add(deb, kvp.Value * aantal);
+				points.Add(deb, (long)Math.Round(kvp.Value * aantal * GetBracketMultiplier(bracket)));
             }
         }
 
@@ -351,13 +367,63 @@ WHERE Prijs_Naam LIKE ?product AND Bestelling_Time>=?timestart AND Bestelling_Ti
                     mysqlConnectButton.IsEnabled = false;
                     forceUpdateButton.IsEnabled = true;
                     timerDatabase.Start();
-                    getCmd = new MySqlCommand(getQuery, connection);
+					getQuery.AppendLine(getQueryStart);
+					getQueryTS.AppendLine(getQueryStart);
+
+					if (!Double.TryParse(bracketMPTextBox.Text, out bracketMP))
+					{
+						bracketMP = 1;
+						writeOutputText("Brackets multiplier invalid, enter valid Double.");
+					}
+
+					if(!Int32.TryParse(bracketsTextBox.Text, out brackets)){
+						brackets = 1;
+						writeOutputText("Number of brackets invalid, enter valid Int32.");
+					}
+					if(brackets > duration * 3){
+						brackets = duration * 3;
+						writeOutputText("Number of brackets too high, max is three per hour (each timeslot).");
+					}
+					if (brackets < 2)
+					{
+						getQuery.AppendLine(@", 0 as Bracket");
+					} else {
+						
+						getQuery.AppendLine(@", CASE");
+						getQuery.AppendLine(@"WHEN Bestelling_Time<?timebracket1 THEN 0");
+						for (int i = 2; i < brackets; i++)
+						{
+							getQuery.AppendLine(String.Format(@"WHEN Bestelling_Time>=?timebracket{0} AND Bestelling_Time<?timebracket{1} THEN {0}",i-1,i));
+						}
+						getQuery.AppendLine(String.Format(@"ELSE '{0}'", brackets - 1));
+						getQuery.AppendLine(@"END AS Bracket");						
+					}
+					getQuery.Append(getQueryEnd);
+					getQueryTS.AppendLine(@", 0 as Bracket");
+					getQueryTS.Append(getQueryEnd);
+					getQuery.Append(@", Bracket");
+                    getCmd = new MySqlCommand(getQuery.ToString(), connection);
+					getCmdTS = new MySqlCommand(getQueryTS.ToString(), connection);
                     getCmd.Prepare();
+					getCmdTS.Prepare();
                     getCmd.Parameters.AddWithValue("product", String.Empty);
-                    getCmd.Parameters.AddWithValue("timestart", 0L);
-                    getCmd.Parameters.AddWithValue("timeend", 0L);
+					getCmdTS.Parameters.AddWithValue("product", String.Empty);
+					
+					getCmd.Parameters.AddWithValue("timestart", ecoStart.ToUnixTimestamp() * 1000);
+					getCmdTS.Parameters.AddWithValue("timestart",0L);
+					getCmd.Parameters.AddWithValue("timeend", ecoEnd.ToUnixTimestamp() * 1000);
+					getCmdTS.Parameters.AddWithValue("timeend", 0L);
+
+					BracketLen = TimeSpan.FromHours(duration / (double)brackets);
+					if (brackets > 1)
+					{
+						for (int i = 1; i < brackets; i++)
+						{
+							DateTime BracketBoundary = ecoStart.Add(BracketLen.Multiply(i));
+							getCmd.Parameters.AddWithValue(String.Format("timebracket{0}", i), BracketBoundary.ToUnixTimestamp() * 1000);
+						}
+					}
                     updateDatabase();
-                    //getCmd.Parameters.Add(new MySqlParameter(
                 }
 
             }
@@ -391,8 +457,32 @@ WHERE Prijs_Naam LIKE ?product AND Bestelling_Time>=?timestart AND Bestelling_Ti
                 writeOutputText("Database update started.");
                 updater.RunWorkerAsync();
 			}
-            bw.updateTimeslots(ref timeslots, ref pointSources, ecoStart, timeslotLen);
+			int bracket = GetCurrentBracket();
+			double pointMP = GetBracketMultiplier(bracket);
+			bw.updateTimeslots(ref timeslots, ref pointSources, ecoStart, timeslotLen, pointMP);
             
+		}
+		public double GetBracketMultiplier(int bracket){			
+			return Math.Pow(bracketMP, bracket);		
+		}
+
+		public int GetCurrentBracket()
+		{
+			int bracket = 0;
+			TimeSpan br = DateTime.Now - ecoStart;
+			if (br > TimeSpan.Zero)
+			{
+				bracket = (int)(br.Ticks / BracketLen.Ticks);
+			}
+			if (bracket < 0)
+			{
+				bracket = 0;
+			}
+			if (bracket >= brackets)
+			{
+				bracket = brackets - 1;
+			}
+			return bracket;
 		}
 
         private void forceUpdateButton_Click(object sender, RoutedEventArgs e)

@@ -15,7 +15,9 @@
             <Setter Property="Padding" Value="0"/>
         </Style>        
     </local:BeamerWindow.Resources>
-    <Grid>
+	
+		
+	<Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*"/>
             <ColumnDefinition Width="8*"/>
@@ -53,4 +55,5 @@
             </WrapPanel.Resources>                       
         </WrapPanel>
     </Grid>
+		
 </local:BeamerWindow>

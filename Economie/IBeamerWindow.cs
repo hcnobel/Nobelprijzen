@@ -11,6 +11,6 @@ namespace Nobel.Economie {
             get; set;
         }
         void updateDisplay(ref Dictionary<String, long> points);
-        void updateTimeslots(ref List<Timeslot> timeslots, ref Dictionary<string, int> pointsources, DateTime ecoStart, TimeSpan timeslotLen);
+		void updateTimeslots(ref List<Timeslot> timeslots, ref Dictionary<string, int> pointsources, DateTime ecoStart, TimeSpan timeslotLen, double pointMP = 1);
     }
 }

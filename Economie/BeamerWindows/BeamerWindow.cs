@@ -25,18 +25,19 @@ namespace Nobel.Economie.BeamerWindows {
             if (e.Key == Key.F11) {
                 if (WindowState != System.Windows.WindowState.Maximized) {
                     WindowStyle = System.Windows.WindowStyle.None;
+					ResizeMode = System.Windows.ResizeMode.NoResize;
                     WindowState = System.Windows.WindowState.Maximized;
-                    ResizeMode = System.Windows.ResizeMode.NoResize;
                 } else {
                     WindowStyle = System.Windows.WindowStyle.SingleBorderWindow;
-                    WindowState = System.Windows.WindowState.Normal;
-                    ResizeMode = System.Windows.ResizeMode.CanResize;
+					ResizeMode = System.Windows.ResizeMode.CanResize;
+                    WindowState = System.Windows.WindowState.Normal;                    
                 }
             }
         }
         #endregion
 
         public abstract void updateDisplay(ref Dictionary<string, long> points);
-        public abstract void updateTimeslots(ref List<Timeslot> timeslots, ref Dictionary<string, int> pointsources, DateTime ecoStart, TimeSpan timeslotLen);
+		public abstract void updateTimeslots(ref List<Timeslot> timeslots, ref Dictionary<string, int> pointsources, DateTime ecoStart, TimeSpan timeslotLen, double pointMP = 1);
+
     }
 }
