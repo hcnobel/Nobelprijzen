@@ -25,8 +25,14 @@ namespace Nobel.Economie.BeamerWindows
 		{
 			InitializeComponent();
 
-			//Get all resources from GroupIcons.resx and add the Icon to the UI.
-			ResourceSet resourceSet = GroupIcons.ResourceManager.GetResourceSet(CultureInfo.CurrentUICulture, true, true);
+            //Start fullscreen
+            this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            WindowStyle = System.Windows.WindowStyle.None;
+            ResizeMode = System.Windows.ResizeMode.NoResize;
+            WindowState = System.Windows.WindowState.Maximized;
+
+            //Get all resources from GroupIcons.resx and add the Icon to the UI.
+            ResourceSet resourceSet = GroupIcons.ResourceManager.GetResourceSet(CultureInfo.CurrentUICulture, true, true);
 			ImageSourceConverter c = new ImageSourceConverter();
 
 			foreach (DictionaryEntry entry in resourceSet)
@@ -178,8 +184,12 @@ namespace Nobel.Economie.BeamerWindows
 			}
 			public void SetPoints(long points)
 			{
+                //Zetten 
 				Points = points;
-				Label.Content = String.Format("{0} punten", Points);
+                if(Points == 1)
+                    Label.Content = String.Format("{0} punt", Points);
+                else
+				    Label.Content = String.Format("{0} punten", Points);
 			}
 
 		}

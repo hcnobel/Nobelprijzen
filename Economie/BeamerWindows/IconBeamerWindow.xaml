@@ -13,14 +13,15 @@
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="FontSize" Value="48" />
             <Setter Property="Padding" Value="0"/>
-        </Style>        
+        </Style>
     </local:BeamerWindow.Resources>
-	
-		
-	<Grid>
+
+
+    <Grid>
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="159*"/>
+            <ColumnDefinition Width="635*"/>
             <ColumnDefinition Width="2*"/>
-            <ColumnDefinition Width="8*"/>
         </Grid.ColumnDefinitions>
         <Label Foreground="White" FontWeight="Bold" FontSize="32" VerticalAlignment="Top" Content="Scorelijst"/>
         <StackPanel x:Name="TimeslotsStackPanel" Margin="0,54,0,10" HorizontalAlignment="Stretch" >
@@ -30,7 +31,7 @@
                 </Style>
             </StackPanel.Resources>
         </StackPanel>
-        <WrapPanel x:Name="wrapPanel" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" ScrollViewer.VerticalScrollBarVisibility="Disabled" Grid.Column="1">
+        <WrapPanel x:Name="wrapPanel" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" ScrollViewer.VerticalScrollBarVisibility="Disabled" Grid.Column="1" Grid.ColumnSpan="2">
             <WrapPanel.Resources>
                 <Style TargetType="{x:Type Grid}">
                     <Setter Property="Height" Value="360" />
@@ -52,8 +53,9 @@
                     <Setter Property="VerticalContentAlignment" Value="Bottom" />
                     <Setter Property="FontSize" Value="28" />
                 </Style>
-            </WrapPanel.Resources>                       
+            </WrapPanel.Resources>
         </WrapPanel>
+        
     </Grid>
-		
+
 </local:BeamerWindow>

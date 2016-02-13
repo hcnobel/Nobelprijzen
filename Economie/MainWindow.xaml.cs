@@ -38,6 +38,7 @@ namespace Nobel.Economie
 		TimeSpan timeslotLen = new TimeSpan(0, 20, 0);
 		int brackets = 1;
 		double bracketMP = 1;
+        const double maxMP = 5;
 		TimeSpan BracketLen;
 		object _updaterLock = new object();
 		int totalQueries = 0;
@@ -366,6 +367,8 @@ namespace Nobel.Economie
 					writeOutputText(String.Format("Connected.", ecoStart, ecoEnd));
                     mysqlConnectButton.IsEnabled = false;
                     forceUpdateButton.IsEnabled = true;
+                    bracketMPTextBox.IsEnabled = false;
+                    bracketsTextBox.IsEnabled = false;
                     timerDatabase.Start();
 					getQuery.AppendLine(getQueryStart);
 					getQueryTS.AppendLine(getQueryStart);
@@ -462,8 +465,13 @@ namespace Nobel.Economie
 			bw.updateTimeslots(ref timeslots, ref pointSources, ecoStart, timeslotLen, pointMP);
             
 		}
-		public double GetBracketMultiplier(int bracket){			
-			return Math.Pow(bracketMP, bracket);		
+		public double GetBracketMultiplier(int bracket){
+
+            double result = Math.Pow(bracketMP, bracket);
+            if (result < maxMP)
+                return result;
+            else
+                return maxMP;		
 		}
 
 		public int GetCurrentBracket()
@@ -509,6 +517,18 @@ namespace Nobel.Economie
             } else {
                 writeOutputText("No Beamer Window Selected.");
             }
+        }
+
+        private void Window_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            // RoutedEventArgs ev = new RoutedEventArgs(new RoutedEvent());
+            if (e.Key == System.Windows.Input.Key.Enter)
+                if (ShowBeamerWindowButton.IsEnabled)
+                    ShowBeamerWindowButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                else if (mysqlConnectButton.IsEnabled)
+                    mysqlConnectButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                else if (forceUpdateButton.IsEnabled)
+                    forceUpdateButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
         }
     }
     public class Timeslot
