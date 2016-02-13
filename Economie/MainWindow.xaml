@@ -2,45 +2,45 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 		xmlns:sys="clr-namespace:System;assembly=mscorlib"
-        Title="Nobelprijzen Economie door Erwin de Haan - Main Window" Height="544.941" Width="525" ResizeMode="NoResize" Closing="Window_Closing" KeyDown="Window_KeyDown">
-    <Grid x:Name="g">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="70*"/>
-            <ColumnDefinition Width="57*"/>
-            <ColumnDefinition Width="392*"/>
-        </Grid.ColumnDefinitions>
-        <TextBox x:Name="serverTextBox" HorizontalAlignment="Left" Height="23" Margin="4,10,0,0" TextWrapping="Wrap" Text="192.168.1.1" Width="120" VerticalContentAlignment="Center" VerticalAlignment="Top" Grid.Column="1" Grid.ColumnSpan="2"/>
-        <Label Content="Server" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.132,0.154" Height="23" Padding="0" VerticalContentAlignment="Center" Target="{Binding ElementName=serverTextBox, Mode=OneWay}"/>
-        <TextBox x:Name="userTextBox" HorizontalAlignment="Left" Height="23" Margin="4,38,0,0" TextWrapping="Wrap" Text="barkasread" Width="120" VerticalContentAlignment="Center" VerticalAlignment="Top" Grid.Column="1" Grid.ColumnSpan="2"/>
-        <Label Content="User" HorizontalAlignment="Left" Margin="10,38,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.132,0.154" Height="23" Padding="0" VerticalContentAlignment="Center" Target="{Binding ElementName=userTextBox, Mode=OneWay}"/>
-        <PasswordBox x:Name="passwordBox" HorizontalAlignment="Left" Margin="4,66,0,0" VerticalAlignment="Top" Width="120" Height="23" VerticalContentAlignment="Center" Password="nobelPrijzen2000vijftien" Grid.Column="1" Grid.ColumnSpan="2"/>
-        <Label Content="Password" HorizontalAlignment="Left" Margin="10,66,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.132,0.154" Height="23" Padding="0" VerticalContentAlignment="Center" Target="{Binding ElementName=passwordBox, Mode=OneWay}"/>
-        <TextBox x:Name="databaseTextBox" HorizontalAlignment="Left" Height="23" Margin="4,94,0,0" TextWrapping="Wrap" Text="barkas_1_0_prod" Width="120" VerticalContentAlignment="Center" VerticalAlignment="Top" Grid.Column="1" Grid.ColumnSpan="2"/>
-        <Label Content="Database" HorizontalAlignment="Left" Margin="10,94,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.132,0.154" Height="23" Padding="0" VerticalContentAlignment="Center" Target="{Binding ElementName=databaseTextBox, Mode=OneWay}"/>
-        <Button x:Name="mysqlConnectButton" Content="Connect" HorizontalAlignment="Left" Margin="10,290,0,0" VerticalAlignment="Top" Width="75" Click="mysqlConnectButton_Click" IsEnabled="False" Grid.ColumnSpan="2"/>
-        <ListBox x:Name="timeSlotsListBox" Height="159" Margin="71.957,11,10,0" VerticalAlignment="Top" Grid.Column="2"/>
-        <ProgressBar x:Name="updaterProgress" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top" Width="104" Margin="20,290,0,0" Grid.Column="1" Grid.ColumnSpan="2"/>
-        <Button x:Name="forceUpdateButton" Content="Force Update" HorizontalAlignment="Left" Margin="10,315,0,0" VerticalAlignment="Top" Width="103" Click="forceUpdateButton_Click" IsEnabled="False" Grid.ColumnSpan="2"/>
-        <Button x:Name="resetButton" Content="Reset" HorizontalAlignment="Left" Margin="48,315,0,0" VerticalAlignment="Top" Width="76" IsEnabled="False" Grid.Column="1" Grid.ColumnSpan="2"/>
-        <TextBox x:Name="outputTextBox" Margin="10,340,10,15" TextWrapping="Wrap" Text="" AcceptsReturn="True" AcceptsTab="True" IsReadOnly="True" IsUndoEnabled="False" Grid.ColumnSpan="3"/>
-        <ListBox x:Name="pointSourcesListBox" Height="160" Margin="71.957,175,10,0" VerticalAlignment="Top" Grid.Column="2"/>
-        <Label Content="Date" HorizontalAlignment="Left" Margin="10,122,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.132,0.154" Height="23" Padding="0" VerticalContentAlignment="Center" Target="{Binding ElementName=datePicker, Mode=OneWay}"/>
-        <DatePicker x:Name="datePicker" HorizontalAlignment="Left" Margin="4,122,0,0" VerticalAlignment="Top" Height="23" Width="120" SelectedDate="{x:Static sys:DateTime.Now}" Grid.Column="1" Grid.ColumnSpan="2"/>
-        <Label Content="Length (h)" HorizontalAlignment="Left" Margin="10,150,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.132,0.154" Height="23" Padding="0" VerticalContentAlignment="Center" Target="{Binding ElementName=durationTextBox, Mode=OneWay}"/>
-        <TextBox x:Name="durationTextBox" HorizontalAlignment="Left" Height="23" Margin="4,150,0,0" TextWrapping="Wrap" Text="9" Width="120" VerticalContentAlignment="Center" VerticalAlignment="Top" Grid.Column="1" Grid.ColumnSpan="2"/>
-        <Label Content="Beamer" HorizontalAlignment="Left" Margin="10,178,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.132,0.154" Height="23" Padding="0" VerticalContentAlignment="Center" Target="{Binding ElementName=durationTextBox, Mode=OneWay}"/>
-        <ComboBox x:Name="BeamerWindowComboBox" HorizontalAlignment="Left" Height="23" Margin="4,178,0,0" VerticalAlignment="Top" Width="120" Grid.Column="1" Grid.ColumnSpan="2">
-            <ComboBoxItem Content="IconBeamerWindow" IsSelected="True"/>
-            <ComboBoxItem Content="ScrollerBeamerWindow"/>
-        </ComboBox>
-        <Label Content="Brackets" HorizontalAlignment="Left" Margin="10,206,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.132,0.154" Height="23" Padding="0" VerticalContentAlignment="Center" Target="{Binding ElementName=durationTextBox, Mode=OneWay}"/>
-        <TextBox x:Name="bracketsTextBox" HorizontalAlignment="Left" Height="23" Margin="4,206,0,0" TextWrapping="Wrap" Text="7" Width="120" VerticalContentAlignment="Center" VerticalAlignment="Top" Grid.Column="1" Grid.ColumnSpan="2"/>
+        Title="Nobelprijzen Economie door Erwin de Haan - Main Window" Height="550" Width="600" ResizeMode="NoResize" Closing="Window_Closing" KeyDown="Window_KeyDown">
+	<Grid x:Name="g">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="1*"/>
+			<ColumnDefinition Width="2*"/>
+			<ColumnDefinition Width="3*"/>
+		</Grid.ColumnDefinitions>
+		<TextBox x:Name="serverTextBox" Height="23" Margin="4,10,5,0" TextWrapping="Wrap" Text="192.168.1.1" VerticalContentAlignment="Center" VerticalAlignment="Top" Grid.Column="1"/>
+		<Label Content="Server" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.132,0.154" Height="23" Padding="0" VerticalContentAlignment="Center" Target="{Binding ElementName=serverTextBox, Mode=OneWay}" Width="33"/>
+		<TextBox x:Name="userTextBox" Height="23" Margin="4,38,5,0" TextWrapping="Wrap" Text="barkasread" VerticalContentAlignment="Center" VerticalAlignment="Top" Grid.Column="1"/>
+		<Label Content="User" HorizontalAlignment="Left" Margin="10,38,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.132,0.154" Height="23" Padding="0" VerticalContentAlignment="Center" Target="{Binding ElementName=userTextBox, Mode=OneWay}" Width="24"/>
+		<PasswordBox x:Name="passwordBox" Margin="4,66,5,0" VerticalAlignment="Top" Height="23" VerticalContentAlignment="Center" Password="nobelPrijzen2000vijftien" Grid.Column="1"/>
+		<Label Content="Password" HorizontalAlignment="Left" Margin="10,66,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.132,0.154" Height="23" Padding="0" VerticalContentAlignment="Center" Target="{Binding ElementName=passwordBox, Mode=OneWay}" Width="50"/>
+		<TextBox x:Name="databaseTextBox" Height="23" Margin="4,94,5,0" TextWrapping="Wrap" Text="barkas_1_0_prod" VerticalContentAlignment="Center" VerticalAlignment="Top" Grid.Column="1"/>
+		<Label Content="Database" HorizontalAlignment="Left" Margin="10,94,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.132,0.154" Height="23" Padding="0" VerticalContentAlignment="Center" Target="{Binding ElementName=databaseTextBox, Mode=OneWay}" Width="49"/>
+		<Button x:Name="mysqlConnectButton" Content="Connect" Margin="10,290,4,0" VerticalAlignment="Top" Click="mysqlConnectButton_Click" IsEnabled="False" Height="20"/>
+		<ListBox x:Name="timeSlotsListBox" Height="162" Margin="0,11,10,0" VerticalAlignment="Top" Grid.Column="2"/>
+		<ProgressBar x:Name="updaterProgress" Height="20" VerticalAlignment="Top" Margin="4,290,5,0" Grid.Column="1"/>
+		<Button x:Name="forceUpdateButton" Content="Force Update" Margin="4,315,5,0" VerticalAlignment="Top" Click="forceUpdateButton_Click" Grid.Column="1" IsEnabled="False" Height="20"/>
+		<Button x:Name="resetButton" Content="Reset" Margin="10,315,5,0" VerticalAlignment="Top" IsEnabled="False" Height="20"/>
+		<TextBox x:Name="outputTextBox" Margin="10,340,10,15" TextWrapping="Wrap" Text="" AcceptsReturn="True" AcceptsTab="True" IsReadOnly="True" IsUndoEnabled="False" Grid.ColumnSpan="3"/>
+		<ListBox x:Name="pointSourcesListBox" Height="157" Margin="0,178,10,0" VerticalAlignment="Top" Grid.Column="2"/>
+		<Label Content="Date" HorizontalAlignment="Left" Margin="10,122,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.132,0.154" Height="23" Padding="0" VerticalContentAlignment="Center" Target="{Binding ElementName=datePicker, Mode=OneWay}" Width="25"/>
+		<DatePicker x:Name="datePicker" Margin="4,122,5,0" VerticalAlignment="Top" Height="23" SelectedDate="{x:Static sys:DateTime.Now}" Grid.Column="1"/>
+		<Label Content="Length (h)" HorizontalAlignment="Left" Margin="10,150,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.132,0.154" Height="23" Padding="0" VerticalContentAlignment="Center" Target="{Binding ElementName=durationTextBox, Mode=OneWay}" Width="54"/>
+		<TextBox x:Name="durationTextBox" Height="23" Margin="4,150,5,0" TextWrapping="Wrap" Text="9" VerticalContentAlignment="Center" VerticalAlignment="Top" Grid.Column="1"/>
+		<Label Content="Beamer" HorizontalAlignment="Left" Margin="10,178,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.132,0.154" Height="23" Padding="0" VerticalContentAlignment="Center" Target="{Binding ElementName=durationTextBox, Mode=OneWay}" Width="40"/>
+		<ComboBox x:Name="BeamerWindowComboBox" Height="23" Margin="4,178,5,0" VerticalAlignment="Top" Grid.Column="1">
+			<ComboBoxItem Content="IconBeamerWindow" IsSelected="True"/>
+			<ComboBoxItem Content="ScrollerBeamerWindow"/>
+		</ComboBox>
+		<Label Content="Brackets" HorizontalAlignment="Left" Margin="10,206,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.132,0.154" Height="23" Padding="0" VerticalContentAlignment="Center" Target="{Binding ElementName=durationTextBox, Mode=OneWay}" Width="44"/>
+		<TextBox x:Name="bracketsTextBox" Height="23" Margin="4,206,5,0" TextWrapping="Wrap" Text="9" VerticalContentAlignment="Center" VerticalAlignment="Top" Grid.Column="1"/>
 
 
-        <Button x:Name="ShowBeamerWindowButton" Content="Show Beamer Window" HorizontalAlignment="Left" Margin="10,264,0,0" VerticalAlignment="Top" Width="184" Click="ShowBeamerWindowButton_Click" Grid.ColumnSpan="3"/>
-        <Label Content="Bracket MP" HorizontalAlignment="Left" Margin="10,234,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.132,0.154" Height="23" Padding="0" VerticalContentAlignment="Center" Target="{Binding ElementName=durationTextBox, Mode=OneWay}"/>
-        <TextBox x:Name="bracketMPTextBox" HorizontalAlignment="Left" Height="23" Margin="4,234,0,0" TextWrapping="Wrap" Text="1,2" Width="120" VerticalContentAlignment="Center" VerticalAlignment="Top" Grid.Column="1" Grid.ColumnSpan="2"/>
+		<Button x:Name="ShowBeamerWindowButton" Content="Show Beamer Window" Margin="10,264,5,0" VerticalAlignment="Top" Click="ShowBeamerWindowButton_Click" Grid.ColumnSpan="2" Height="20"/>
+		<Label Content="Bracket MP" HorizontalAlignment="Left" Margin="10,234,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.132,0.154" Height="23" Padding="0" VerticalContentAlignment="Center" Target="{Binding ElementName=durationTextBox, Mode=OneWay}" Width="60"/>
+		<TextBox x:Name="bracketMPTextBox" Height="23" Margin="4,234,5,0" TextWrapping="Wrap" Text="1,2" VerticalContentAlignment="Center" VerticalAlignment="Top" Grid.Column="1"/>
 
 
-    </Grid>
+	</Grid>
 </Window>
