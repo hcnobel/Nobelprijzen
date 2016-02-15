@@ -52,7 +52,7 @@ namespace Nobel.Economie.BeamerWindows
 
 				foreach (KeyValuePair<String, long> kvp in points)
 				{
-					string resourceKey = kvp.Key.ToLower().Replace(' ', '_');
+					string resourceKey = kvp.Key.ToLower().Trim().Replace(' ', '_');
 					if (groups.ContainsKey(resourceKey))
 					{
 						groups[resourceKey].SetPoints(kvp.Value);

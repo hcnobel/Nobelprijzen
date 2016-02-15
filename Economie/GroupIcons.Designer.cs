@@ -83,9 +83,9 @@ namespace Nobel.Economie {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Bestuur {
+        internal static System.Drawing.Bitmap Bestuur_119 {
             get {
-                object obj = ResourceManager.GetObject("Bestuur", resourceCulture);
+                object obj = ResourceManager.GetObject("Bestuur_119", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
