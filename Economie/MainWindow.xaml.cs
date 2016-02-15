@@ -514,6 +514,7 @@ namespace Nobel.Economie
                 ShowBeamerWindowButton.IsEnabled = false;
                 //Show window
                 bw.Show();
+				bw.MaximizeToSecondaryMonitor();
             } else {
                 writeOutputText("No Beamer Window Selected.");
             }

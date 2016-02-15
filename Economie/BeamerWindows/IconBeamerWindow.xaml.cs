@@ -24,13 +24,7 @@ namespace Nobel.Economie.BeamerWindows
 		public IconBeamerWindow()
 		{
 			InitializeComponent();
-
-            //Start fullscreen
-            this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            WindowStyle = System.Windows.WindowStyle.None;
-            ResizeMode = System.Windows.ResizeMode.NoResize;
-            WindowState = System.Windows.WindowState.Maximized;
-
+			     
             //Get all resources from GroupIcons.resx and add the Icon to the UI.
             ResourceSet resourceSet = GroupIcons.ResourceManager.GetResourceSet(CultureInfo.CurrentUICulture, true, true);
 			ImageSourceConverter c = new ImageSourceConverter();
