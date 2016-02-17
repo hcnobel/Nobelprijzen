@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -39,7 +40,8 @@ namespace Nobel.Economie
 		int brackets = 1;
 		double bracketMP = 1;
         const double maxMP = 5;
-		TimeSpan BracketLen;
+        const int flesMP = 20;
+        TimeSpan BracketLen;
 		object _updaterLock = new object();
 		int totalQueries = 0;
         
@@ -49,7 +51,7 @@ namespace Nobel.Economie
 		StringBuilder getQuery = new StringBuilder();
 		StringBuilder getQueryTS = new StringBuilder();
 		String getQueryStart = @"SELECT 
-			SUM(bestelling.Bestelling_AantalS) as Totaal_Aantal, debiteur.Debiteur_Naam, prijs.Prijs_Naam";
+			SUM(bestelling.Bestelling_AantalS) as Totaal_Aantal, SUM(bestelling.Bestelling_AantalS50) as Totaal_AantalFles, debiteur.Debiteur_Naam, prijs.Prijs_Naam";
 
 			/*CASE
 			 WHEN Bestelling_Time<?timebracket1 THEN '0'
@@ -269,21 +271,30 @@ namespace Nobel.Economie
             String item = dataReader["Prijs_Naam"].ToString();
 			int bracket = Int32.Parse(dataReader["Bracket"].ToString());
             int aantal = Int32.Parse(dataReader["Totaal_Aantal"].ToString());
-            //Fles is 20 maal aantal punten
-            if (item.Contains("fles", StringComparison.OrdinalIgnoreCase))
-            {
-                aantal *= 20;
+            int aantalFles = Int32.Parse(dataReader["Totaal_AantalFles"].ToString());
+            
+            long p = 0;
+            if (aantalFles > 0) {
+                //Het is een fles!
+                p += (long)Math.Round(kvp.Value * flesMP * aantalFles * GetBracketMultiplier(bracket));
+            } else {
+                //Fles is 20 maal aantal punten (fallback)
+                if (item.Contains("fles", StringComparison.OrdinalIgnoreCase)) {
+                    aantal *= flesMP;
+                }
+                p += (long)Math.Round(kvp.Value * aantal * GetBracketMultiplier(bracket));
             }
+                        
             if (points.ContainsKey(deb))
             {
                 //Debiteur bestaat al: punten toevoegen
-				points[deb] += (long)Math.Round(kvp.Value * aantal * GetBracketMultiplier(bracket));
+				points[deb] += p;
             }
 
             else
             {
                 //Debiteur bestaat nog niet: Toevoegen, plus punten
-				points.Add(deb, (long)Math.Round(kvp.Value * aantal * GetBracketMultiplier(bracket)));
+				points.Add(deb, p);
             }
         }
 
@@ -373,13 +384,13 @@ namespace Nobel.Economie
 					getQuery.AppendLine(getQueryStart);
 					getQueryTS.AppendLine(getQueryStart);
 
-					if (!Double.TryParse(bracketMPTextBox.Text, out bracketMP))
+					if (!Double.TryParse(bracketMPTextBox.Text.Replace(',', '.'), NumberStyles.Any, CultureInfo.InvariantCulture, out bracketMP))
 					{
 						bracketMP = 1;
 						writeOutputText("Brackets multiplier invalid, enter valid Double.");
 					}
 
-					if(!Int32.TryParse(bracketsTextBox.Text, out brackets)){
+					if(!Int32.TryParse(bracketsTextBox.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out brackets)){
 						brackets = 1;
 						writeOutputText("Number of brackets invalid, enter valid Int32.");
 					}
