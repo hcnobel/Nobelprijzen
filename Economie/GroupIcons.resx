@@ -160,7 +160,7 @@
   <data name="Spetter" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Spetter.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="TDC" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="TDC_63" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\TDC.jpeg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>
